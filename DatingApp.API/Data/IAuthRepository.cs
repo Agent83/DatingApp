@@ -1,4 +1,4 @@
-using System.Threading.Task;
+using System.Threading.Tasks;
 using DatingApp.API.Models;
 
 namespace DatingApp.API.Data

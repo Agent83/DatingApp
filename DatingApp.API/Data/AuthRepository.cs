@@ -1,5 +1,6 @@
-using System.Threading.Task;
+using System.Threading.Tasks;
 using DatingApp.API.Models;
+using Microsoft.EntityFrameworkCore;
 
 namespace DatingApp.API.Data
 {
@@ -12,7 +13,7 @@ namespace DatingApp.API.Data
             _context = context;
         }
 
-        public await Task<User> Register(User user, string password)
+        public async Task<User> Register(User user, string password)
         {
               byte[] passwordHash, passwordSalt;
               CreatePasswordHash(password, out passwordHash, out passwordSalt);
@@ -20,18 +21,18 @@ namespace DatingApp.API.Data
               user.PasswordHash = passwordHash;
               user.PasswordSalt = passwordSalt;
 
-              await _context.Users.AddSync(user);
-              await _context.SaveChangesAsynce();
+              await _context.Users.AddAsync(user);
+              await _context.SaveChangesAsync();
 
               return user;
         }
 
-        CreatePasswordHash(string password, out byte[] passwordHash, out byte[] passwordSalt)
+       private void CreatePasswordHash(string password, out byte[] passwordHash, out byte[] passwordSalt)
         {      
             using ( var hmac = new System.Security.Cryptography.HMACSHA512())
             {
                 passwordSalt = hmac.Key;
-                passwordHash = hmac.ComputeHash(System.Text.Encoding,UTF8.GetBytes(password));
+                passwordHash = hmac.ComputeHash(System.Text.Encoding.UTF8.GetBytes(password));
             }
         }
 
@@ -48,22 +49,22 @@ namespace DatingApp.API.Data
            return user;
         }  
 
-        private bool VerifyPasswordHash(password, byte[] passwordHash,byte[] passwordSalt)
+        private bool VerifyPasswordHash(string password, byte[] passwordHash,byte[] passwordSalt)
         {
-          using ( var hmac = new System.Security.Cryptography.HMACSHA512(passwordSalt))
+          using (var hmac = new System.Security.Cryptography.HMACSHA512(passwordSalt))
             {
-                var computeHash = hmac.ComputeHash.(System.Text.Encoding.UTF8.GetBytes(password));
+                var computeHash = hmac.ComputeHash(System.Text.Encoding.UTF8.GetBytes(password));
                 for(int i = 0; i< computeHash.Length; i++)
                 {
-                    if(computeHash[i] != passwordHash[i]) return false
+                    if(computeHash[i] != passwordHash[i]) 
+                    return false;
                 }
             }
             return true;
         }
-        public Task<bool> UserExists(string username)
+        public async Task<bool> UserExists(string username)
         {
-           if(await _context.Users.AnyAsync(x => x.Username == username))
-           return true;
+           if(await _context.Users.AnyAsync(x => x.Username == username))return true;
 
            return false;
         }
