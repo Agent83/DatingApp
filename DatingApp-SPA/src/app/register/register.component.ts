@@ -14,12 +14,12 @@ model: any = {};
   ngOnInit() {
   }
   
-  register(){
+  register() {
     this.aurhtService.register(this.model).subscribe(() => {
       console.log('registration successful');
     }, error => {
       console.log(error);
-    })
+    });
   }
 
   cancel(){
