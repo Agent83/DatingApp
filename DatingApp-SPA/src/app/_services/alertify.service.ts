@@ -16,17 +16,17 @@ confirm(message: string, okCallback: () => any) {
 
   });
 }
- success(message: string){
+ success(message: string) {
    alertify.success(message);
  }
 
- error(message: string){
+ error(message: string) {
   alertify.error(message);
  }
- warning(message: string){
+ warning(message: string) {
   alertify.wraning(message);
  }
- message(message: string){
+ message(message: string) {
   alertify.message(message);
  }
 }
