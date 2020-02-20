@@ -1,12 +1,17 @@
+import { MemberListReslover } from './_resolvers/member-List.resolver';
+import { MemberDetailReslover } from './_resolvers/member-detail.resolver';
+import { UserService } from './_services/user.service';
+import { AuthGuard } from './_guards/auth.guard';
 import { MemberDetailComponent } from './members/member-list/member-detail/member-detail.component';
 import { appRoutes } from './routes';
-import { BrowserModule } from '@angular/platform-browser';
+import { BrowserModule, HammerGestureConfig, HAMMER_GESTURE_CONFIG } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
 import {HttpClientModule} from '@angular/common/http';
 import {FormsModule} from '@angular/forms';
-import { BsDropdownModule } from 'ngx-bootstrap';
+import { BsDropdownModule, TabsModule } from 'ngx-bootstrap';
 import { RouterModule } from '@angular/router';
 import { JwtModule } from '@auth0/angular-jwt';
+import {NgxGalleryModule} from 'ngx-gallery';
 
 import { AppComponent } from './app.component';
 import { NavComponent } from './nav/nav.component';
@@ -26,6 +31,12 @@ export function tokenGetter() {
    return localStorage.getItem('token');
 }
 
+export class CustomHammerConfig extends HammerGestureConfig {
+   overrides = {
+      pinch: {enable: false},
+      rotate: {enable: false}
+   };
+}
 
 @NgModule({
    declarations: [
@@ -45,7 +56,9 @@ export function tokenGetter() {
       FormsModule,
       BsDropdownModule.forRoot(),
       BrowserAnimationsModule,
+      TabsModule.forRoot(),
       RouterModule.forRoot(appRoutes),
+      NgxGalleryModule,
       JwtModule.forRoot({
          config: {
             tokenGetter,
@@ -57,7 +70,12 @@ export function tokenGetter() {
    providers: [
       ErrorInterceptorProvider,
       AuthService,
-      AlertifyService
+      AlertifyService,
+      AuthGuard,
+      UserService,
+      MemberDetailReslover,
+      MemberListReslover,
+      { provide: HAMMER_GESTURE_CONFIG, useClass: CustomHammerConfig}
    ],
    bootstrap: [
       AppComponent
