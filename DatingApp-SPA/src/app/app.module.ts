@@ -1,3 +1,6 @@
+import { PreventUnsavedChanges } from './_guards/prevent-unsaved-changes.guard';
+import { MemberEditComponent } from './members/member-list/member-edit/member-edit.component';
+import { MemberEditReslover } from './_resolvers/member-edit.resolver';
 import { MemberListReslover } from './_resolvers/member-List.resolver';
 import { MemberDetailReslover } from './_resolvers/member-detail.resolver';
 import { UserService } from './_services/user.service';
@@ -48,7 +51,8 @@ export class CustomHammerConfig extends HammerGestureConfig {
       ListsComponent,
       MessagesComponent,
       MemberCardComponent,
-      MemberDetailComponent
+      MemberDetailComponent,
+      MemberEditComponent
    ],
    imports: [
       BrowserModule,
@@ -74,7 +78,9 @@ export class CustomHammerConfig extends HammerGestureConfig {
       AuthGuard,
       UserService,
       MemberDetailReslover,
+      MemberEditReslover,
       MemberListReslover,
+      PreventUnsavedChanges,
       { provide: HAMMER_GESTURE_CONFIG, useClass: CustomHammerConfig}
    ],
    bootstrap: [
